@@ -9,44 +9,50 @@ clients = {
     }
 
 def start(file, list):
-   print("Введите ваше имя или номер: ")
-   given = input()
-   count = 0
+   try:
+      print("Введите ваше имя или номер: ")
+      given = input()
+      count = 0
 
-   if given.isdigit() == True:
-      digitKey = int(given)
+      if given.isdigit() == True:
+           digitKey = int(given)
 
-      for key, value in clients.items():
-          if digitKey == key:
-              print("Добро пожаловать ", value)
-              break
-
-          elif digitKey > 3:
-              print("Ключ принят, введите имя: ")
-              name = input()
-              list = {digitKey:name}
-              with open(file, 'r+') as f_obj:
-                  json.dump(list, f_obj)
+           for key, value in clients.items():
+              if digitKey == key:
+                  print("Добро пожаловать ", value)
                   break
 
-   elif given.isdigit() == False:
+              elif digitKey > 3:
+                  print("Ключ принят, введите имя: ")
+                  name = input()
+                  list = {digitKey:name}
+                  with open(file, '+r') as f_obj:
+                      json.dump(list, f_obj)
+                      break
 
-        if given.isalpha() == False:
-            print("Неправильный формат имени, используйте только\n латинские буквы без пробелов.")
-            start(file, list)
+      elif given.isdigit() == False:
 
-        elif given.isalpha() == True:
-            for k, v in clients.items():
-                if given == v:
-                    print("Добро пожаловать, вы номер ", k)
-                elif given != v:
-                    count += 1
-                    continue
-                if count == len(clients):
-                    list = {k+1:given}
-                    with open(file, 'r+') as f_obj:
-                        json.dump(list, f_obj)
-                        break
+            if given.isalpha() == False:
+                print("Неправильный формат имени, используйте только\n латинские буквы без пробелов.")
+                start(file, list)
+
+            elif given.isalpha() == True:
+                      for k, v in clients.items():
+                        if given == v:
+                           print("Добро пожаловать, вы номер ", k)
+                        elif given != v:
+                           count += 1
+                           continue
+
+            if count == len(clients):
+                list = {k+1:given}
+                with open(file, '+r') as f_obj:
+                     json.dump(list, f_obj)
+        
+   except EOFError:
+       print("ОШИБКА!")
+       start(file, list)
+
 start(fileName, clients)
 
 
